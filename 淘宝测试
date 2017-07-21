@@ -1,0 +1,50 @@
+#encoding:utf8
+import time
+from selenium import webdriver
+import unittest
+class ZhunBei(object):
+    """converter the Roman Number"""
+    def __init__(self):
+        self.driver = webdriver.Chrome()
+        self.url = 'https://secure.newegg.cn/Customer/Login.aspx?returnUrl=http%3A%2F%2Fwww.newegg.cn%2F'
+        self.driver.implicitly_wait(10)
+        self.driver.maximize_window()
+        self.verificationErrors = []
+        self.accept_next_alert = True
+    def gouMaiDongXi(self):
+        driver = self.driver
+        driver.get(self.url)
+        driver.maximize_window()
+        driver.find_element_by_xpath('//*[@id="name"]').send_keys('18833901819')  # 输入账号
+        driver.find_element_by_xpath('//*[@id="pwd"]').send_keys('keyi1027')  # 输入密码
+        driver.find_element_by_xpath('//*[@id="LoginForm"]/div/div[3]/a/span').click()  # 点击登录按钮
+        driver.find_element_by_xpath('//*[@id="topSearch"]').send_keys('U盘')  # 在搜索框输入'U盘'
+        driver.find_element_by_xpath('//*[@id="header"]/div/div[3]/a').click()  # 点击搜索按钮
+        driver.find_element_by_xpath(
+            '//*[@id="main"]/div/div/div[1]/div/div[4]/ul[1]/div/a[1]/img').click()  # 点击物品图片
+        driver.get('http://www.newegg.cn/Product/A02-053-2CJ-02.htm')
+        driver.find_element_by_xpath('//*[@id="addToCart"]').click()  # 加入购物车
+
+        time.sleep(10)
+    def test_shoppingcart(self):
+        driver = self.driver
+        driver.get(self.url)
+        driver.maximize_window()
+        driver.find_element_by_xpath('//*[@id="name"]').send_keys('18833901819')  # 输入账号
+        driver.find_element_by_xpath('//*[@id="pwd"]').send_keys('keyi1027')  # 输入密码
+        driver.find_element_by_xpath('//*[@id="LoginForm"]/div/div[3]/a/span').click()  # 点击登录按钮
+        time.sleep(5)
+        driver.find_element_by_id('gotoShoppingcart_a').click()
+        time.sleep(5)
+        windows = driver.window_handles
+        driver.switch_to_window(windows[1])
+        a = driver.find_element_by_xpath('//*[@id="comBoId_184003"]/td[5]/span').text
+        b = a[1:4]
+        return b
+class RomanNumeralConverterTest(unittest.TestCase):
+   """test class"""
+   def test_parsing_millenia(self):
+       value = ZhunBei()
+       self.assertEquals('180', value.test_shoppingcart())
+
+if __name__ == "__main__": unittest.main()
